@@ -99,24 +99,11 @@ export async function postChannelSuccessComment(
     console.log("Error checking for previous comments: " + e.message);
   }
 
-  if (commentId) {
-    try {
-      await github.issues.updateComment({
-        ...context.repo,
-        comment_id: commentId,
-        body: comment.body,
-      });
-    } catch (e) {
-      commentId = null;
-    }
+  try {
+    await github.issues.createComment(comment);
+  } catch (e) {
+    console.log(`Error creating comment: ${e.message}`);
   }
-
-  if (!commentId) {
-    try {
-      await github.issues.createComment(comment);
-    } catch (e) {
-      console.log(`Error creating comment: ${e.message}`);
-    }
-  }
+  
   endGroup();
 }
